@@ -37,20 +37,22 @@ function App() {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    <tr className="py-2">
-                      <td>Go to gym</td>
-                      <td className="bg-[#9BC1BC] w-20 rounded-md text-white font-medium shadow-md py-[1px]">
+                    <tr className="min-h-8 border-2">
+                      <td className="inline-block">Go to gym</td>
+                      <td className="bg-[#9BC1BC] w-20 rounded-md text-white font-medium shadow-md">
                         pending
                       </td>
-                      <td className="text-center">
-                        <MdDeleteForever className="text-red-500 text-lg" />
+                      <td className="flex justify-center items-center">
+                        <MdDeleteForever className="text-red-500 text-xl" />
                       </td>
                     </tr>
                     <tr>
                       <td>Go to gym</td>
-                      <td>pending</td>
-                      <td>
-                        <MdDeleteForever className="text-red-500 text-lg" />
+                      <td className="bg-[#9BC1BC] w-20 rounded-md text-white font-medium shadow-md">
+                        chech
+                      </td>
+                      <td className="flex justify-center items-center">
+                        <MdDeleteForever className="text-red-500 text-xl" />
                       </td>
                     </tr>
                   </tbody>
