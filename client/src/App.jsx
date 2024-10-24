@@ -8,7 +8,7 @@ function App() {
         <div className="box rounded-2xl overflow-hidden mt-20 shadow-xl">
           <div className="box-head bg-[#57568E] min-h-24">
             <h2 className="text-white text-center font-light text-4xl uppercase">
-              TODO list
+              TODO lists
             </h2>
           </div>
           <div className="box-content bg-slate-100 pb-12 relative">
