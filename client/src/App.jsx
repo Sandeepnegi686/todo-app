@@ -62,37 +62,37 @@ function App() {
             </form>
             {/* absolute top-[-20%] left-[50%] translate-x-[-50%] */}
             <div className="todo-show-box mt-6 py-6 rounded-xl shadow-xl mx-auto w-[90%] bg-white">
-              <h2 className="head text-xl font-bold pl-6 py-6">Todo List</h2>
-              <div className="list">
-                <table className="w-full">
-                  <thead className="bg-[#F1F5F9]">
-                    <tr className="text-gray-400 py-40">
-                      <th className="font-normal text-md py-2">List</th>
-                      <th className="font-normal text-md py-2">Status</th>
-                      <th className="font-normal text-md py-2">Close</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-center">
+              {todos.length > 0 ? (
+                <>
+                  <h2 className="head text-xl font-bold pl-6 py-6">
+                    Todo List
+                  </h2>
+                  <div className="list">
+                    <li className="list-none flex justify-between items-center text-gray-700 bg-[#F9F9F9] h-10 px-10">
+                      <p>List </p> <p>Status</p> <p>Close</p>
+                    </li>
                     {todos.map((todo, index) => (
-                      <tr className="min-h-8 border-2" key={index}>
-                        <td className="inline-block">{todo.title}</td>
-                        <td
-                          className="bg-[#9BC1BC] w-20 rounded-md text-white font-medium shadow-md cursor-pointer"
+                      <li className="list-none flex justify-between items-center px-10 h-14 text-gray-600 border-b-[1px]">
+                        <p>{todo.title}</p>
+                        <p
+                          className="bg-[#9BC1BC] px-4 rounded-md text-gray-50 text-md cursor-pointer hover:bg-[#8CC2AA] transition-all shadow-md"
                           onClick={() => changeTodoToComplete(todo.id)}
                         >
                           {todo.status}
-                        </td>
-                        <td
-                          className="flex justify-center items-center cursor-pointer"
+                        </p>
+                        <p
+                          className="cursor-pointer"
                           onClick={() => handleDeleteTodo(todo.id)}
                         >
                           <MdDeleteForever className="text-red-500 text-xl" />
-                        </td>
-                      </tr>
+                        </p>
+                      </li>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </div>
+                </>
+              ) : (
+                <h2 className="text-xl font-bold pl-6">No Todos to show</h2>
+              )}
             </div>
           </div>
         </div>
