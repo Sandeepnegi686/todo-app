@@ -11,6 +11,6 @@ todoRoute.get("/", getAllTodo);
 
 todoRoute.post("/", createTodo);
 
-todoRoute.delete("/", deleteTodo);
+todoRoute.delete("/:id", deleteTodo);
 
 export default todoRoute;

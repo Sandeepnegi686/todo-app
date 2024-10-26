@@ -3,7 +3,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { useAppContext } from "../context/appContext";
 
 const Home = () => {
-  const { todos, addTodo } = useAppContext();
+  const { todos, addTodo, deleteTodo } = useAppContext();
 
   // console.log(todos);
   // const [todos, setTodos] = useState([]);
@@ -21,7 +21,7 @@ const Home = () => {
 
   //Delete the Todo form list
   function handleDeleteTodo(id) {
-    // setTodos((todos) => todos.filter((todo) => todo.id !== id));
+    deleteTodo(id);
   }
 
   // Change the status of Todo to completed
@@ -83,13 +83,14 @@ const Home = () => {
                         <p>{todo.title}</p>
                         <p
                           className="bg-[#9BC1BC] px-4 rounded-md text-gray-50 text-md cursor-pointer hover:bg-[#8CC2AA] transition-all shadow-md"
-                          onClick={() => changeTodoToComplete(todo.id)}
+                          onClick={() => changeTodoToComplete(todo._id)}
+                          title="Change to complete"
                         >
                           {todo.status}
                         </p>
                         <p
                           className="cursor-pointer"
-                          onClick={() => handleDeleteTodo(todo.id)}
+                          onClick={() => handleDeleteTodo(todo._id)}
                         >
                           <MdDeleteForever className="text-red-500 text-xl" />
                         </p>
