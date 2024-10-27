@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { MdDeleteForever } from "react-icons/md";
 import { useAppContext } from "../context/appContext";
+import TodoList from "../components/TodoList";
 
 const Home = () => {
-  const { todos, addTodo, deleteTodo } = useAppContext();
+  const { todos, addTodo } = useAppContext();
 
   // console.log(todos);
-  // const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState("");
 
   //Adding todo to the list
@@ -17,23 +16,6 @@ const Home = () => {
     // setTodos((todo) => [...todo, todoMap]);.
     addTodo(todo);
     setTodo("");
-  }
-
-  //Delete the Todo form list
-  function handleDeleteTodo(id) {
-    deleteTodo(id);
-  }
-
-  // Change the status of Todo to completed
-  function changeTodoToComplete(id) {
-    // setTodos((todos) =>
-    //   todos.map((todo) => {
-    //     if (todo.id === id) {
-    //       todo.status = "Completed";
-    //     }
-    //     return todo;
-    //   })
-    // );
   }
 
   return (
@@ -76,25 +58,7 @@ const Home = () => {
                       <p>List </p> <p>Status</p> <p>Close</p>
                     </li>
                     {todos.map((todo, index) => (
-                      <li
-                        className="list-none flex justify-between items-center px-10 h-14 text-gray-600 border-b-[1px]"
-                        key={index}
-                      >
-                        <p>{todo.title}</p>
-                        <p
-                          className="bg-[#9BC1BC] px-4 rounded-md text-gray-50 text-md cursor-pointer hover:bg-[#8CC2AA] transition-all shadow-md"
-                          onClick={() => changeTodoToComplete(todo._id)}
-                          title="Change to complete"
-                        >
-                          {todo.status}
-                        </p>
-                        <p
-                          className="cursor-pointer"
-                          onClick={() => handleDeleteTodo(todo._id)}
-                        >
-                          <MdDeleteForever className="text-red-500 text-xl" />
-                        </p>
-                      </li>
+                      <TodoList key={index} todo={todo} />
                     ))}
                   </div>
                 </>

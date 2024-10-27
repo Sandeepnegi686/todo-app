@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import {
   ADD_TODO,
   CHANGE_TODO_VALUE,
+  DELETE_TODO,
+  EDIT_TODO,
   initialState,
   SET_TODO_IN_STATE,
 } from "./action";
@@ -47,17 +49,29 @@ function AppProvider({ children }) {
       toast.success(res.data.message);
     } catch (error) {
       console.log(error);
-      toast.success("something went wrong");
+      toast.error("something went wrong");
     }
   }
 
   async function deleteTodo(id) {
     try {
       const res = await axios.delete(`/todo/${id}`);
-      dispatch({ type: "DELETE_TODO", payload: id });
+      // getTodos();
+      dispatch({ type: DELETE_TODO, payload: id });
       toast.success(res.data.message);
     } catch (error) {
-      toast.error(error);
+      // console.log(error);
+      toast.error(error.message);
+    }
+  }
+
+  async function editTodo(id) {
+    try {
+      const res = await axios.patch(`/todo/${id}`);
+      dispatch({ type: EDIT_TODO, payload: id });
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 
@@ -76,6 +90,7 @@ function AppProvider({ children }) {
         ...state,
         addTodo,
         deleteTodo,
+        editTodo,
         onChangeHandleTodo,
       }}
     >

@@ -33,6 +33,27 @@ async function createTodo(req, res) {
   }
 }
 
+async function editTodo(req, res) {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "ID is missing" });
+
+    if (!mongoose.isValidObjectId(id))
+      return res.status(400).json({ message: "not valid id" });
+
+    const todo = await TodoModel.findOne({ _id: id });
+
+    if (!todo) return res.status(400).json({ message: "Todo not found" });
+
+    todo.status = "completed";
+    await todo.save();
+    return res.status(200).json({ message: "Todo edited succesfully", todo });
+  } catch (error) {
+    console.error("Error editing todo:", error);
+    return res.status(500).json({ message: "Server errors" });
+  }
+}
+
 async function deleteTodo(req, res) {
   try {
     const { id } = req.params;
@@ -57,4 +78,4 @@ async function deleteTodo(req, res) {
   }
 }
 
-export { getAllTodo, createTodo, deleteTodo };
+export { getAllTodo, createTodo, deleteTodo, editTodo };
