@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-yellow-50 h-screen;
+    @apply bg-slate-200 h-screen;
   }
   #root {
     @apply h-full;

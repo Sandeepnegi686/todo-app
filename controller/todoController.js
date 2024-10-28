@@ -47,7 +47,7 @@ async function editTodo(req, res) {
 
     todo.status = "completed";
     await todo.save();
-    return res.status(200).json({ message: "Todo edited succesfully", todo });
+    return res.status(200).json({ message: "Todo compeleted", todo });
   } catch (error) {
     console.error("Error editing todo:", error);
     return res.status(500).json({ message: "Server errors" });

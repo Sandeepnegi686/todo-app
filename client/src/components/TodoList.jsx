@@ -4,7 +4,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { useAppContext } from "../context/appContext";
 
 export default function TodoList({ todo }) {
-  const { deleteTodo, editTodo } = useAppContext();
+  const { deleteTodo, editTodo, todos } = useAppContext();
 
   //Delete the Todo form list
   function handleDeleteTodo(id) {
@@ -12,10 +12,15 @@ export default function TodoList({ todo }) {
   }
 
   function changeTodoToComplete(id) {
-    // const IDPresent = false;
-    // todos.forEach(todo=> todo._id === id && IDPresent= true)
-    // if()
-    editTodo(id);
+    let pending = false;
+
+    for (const todo of todos) {
+      if (todo._id === id && todo.status === "pending") pending = true;
+    }
+
+    if (pending) {
+      editTodo(id);
+    }
   }
 
   return (

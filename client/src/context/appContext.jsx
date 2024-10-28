@@ -32,15 +32,14 @@ function AppProvider({ children }) {
 
   //Get Todo from Database & adding them to localstorage
   async function getTodos() {
-    const res = await axios.get("/todo");
-    // addTodosToLocalStorage(res.data.todos);
-    dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
-    // notify("Here is your toast.");
+    try {
+      const res = await axios.get("/todo");
+      // addTodosToLocalStorage(res.data.todos);
+      dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
-
-  // function updateTodosOnState(){
-  //   dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
-  // }
 
   async function addTodo(todo) {
     try {
@@ -56,7 +55,6 @@ function AppProvider({ children }) {
   async function deleteTodo(id) {
     try {
       const res = await axios.delete(`/todo/${id}`);
-      // getTodos();
       dispatch({ type: DELETE_TODO, payload: id });
       toast.success(res.data.message);
     } catch (error) {
@@ -79,9 +77,17 @@ function AppProvider({ children }) {
     getTodos();
   }, []);
 
-  function onChangeHandleTodo(value) {
-    dispatch({ type: CHANGE_TODO_VALUE, payload: value });
-    console.log(value);
+  // function onChangeHandleTodo(value) {
+  //   dispatch({ type: CHANGE_TODO_VALUE, payload: value });
+  //   console.log(value);
+  // }
+
+  async function loginUser(data) {
+    console.log(data);
+  }
+
+  async function signUpUser(data) {
+    console.log(data);
   }
 
   return (
@@ -91,7 +97,8 @@ function AppProvider({ children }) {
         addTodo,
         deleteTodo,
         editTodo,
-        onChangeHandleTodo,
+        loginUser,
+        signUpUser,
       }}
     >
       {children}
