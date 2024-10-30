@@ -18,13 +18,13 @@ const Home = () => {
   return (
     <div className="conatiner max-w-4xl my-0 mx-auto h-full w-[90%]">
       <div className="box rounded-2xl overflow-hidden mt-20 shadow-xl">
-        <div className="box-head bg-[#57568E] min-h-24">
+        <div className="box-head bg-[#57568E] min-h-24 z-[4] relative">
           <h2 className="text-white text-center font-light text-4xl uppercase">
             TODO lists
           </h2>
         </div>
         <div className="box-content bg-slate-100 pb-12 relative">
-          <form className="todo-input-box flex flex-col justify-evenly gap-5 items-center rounded-xl bg-white w-[90%] my-0 mx-auto py-7 shadow-xl">
+          <form className="todo-input-box mt-[-42px] z-[5] relative flex flex-col justify-evenly gap-5 items-center rounded-xl bg-white w-[90%] mx-auto py-7 shadow-xl">
             <input
               type="text"
               name=""
