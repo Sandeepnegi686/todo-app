@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import TodoModel from "../model/Todo.js";
+import BadRequestError from "../error/BadRequestError.js";
 
 async function getAllTodo(req, res) {
   try {
@@ -16,20 +17,19 @@ async function getAllTodo(req, res) {
 
 async function createTodo(req, res) {
   try {
-    const { title } = req.body;
-    console.log(title);
-    if (!title)
-      return res.status(400).json({ message: "Please provide a todo" });
+    const { title, createdBy } = req.body;
+    if (!title || !createdBy) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-    const todo = TodoModel({ title });
+    const todo = TodoModel({ title, createdBy });
     await todo.save();
 
     return res
       .status(201)
       .json({ message: "Todo is created successfully", todo });
   } catch (error) {
-    console.error("Error creating todo:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Error creating todo" });
   }
 }
 
@@ -39,7 +39,7 @@ async function editTodo(req, res) {
     if (!id) return res.status(400).json({ message: "ID is missing" });
 
     if (!mongoose.isValidObjectId(id))
-      return res.status(400).json({ message: "not valid id" });
+      return res.status(400).json({ message: "Not valid ID" });
 
     const todo = await TodoModel.findOne({ _id: id });
 
@@ -57,7 +57,6 @@ async function editTodo(req, res) {
 async function deleteTodo(req, res) {
   try {
     const { id } = req.params;
-    // return res.status(400).json({ message: "ID is not given" });
 
     if (!id) {
       return res.status(400).json({ message: "ID is not given" });
@@ -73,7 +72,6 @@ async function deleteTodo(req, res) {
     await todo.deleteOne();
     return res.status(200).json({ message: "Todo deleted successfully", todo });
   } catch (error) {
-    console.error("Error deleting todo:", error);
     return res.status(500).json({ message: "Server errors" });
   }
 }
