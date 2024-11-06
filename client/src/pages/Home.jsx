@@ -3,7 +3,7 @@ import { useAppContext } from "../context/appContext";
 import TodoList from "../components/TodoList";
 
 const Home = () => {
-  const { todos, addTodo } = useAppContext();
+  const { todos, addTodo, user } = useAppContext();
 
   const [todo, setTodo] = useState("");
 
@@ -11,7 +11,7 @@ const Home = () => {
   function handleAddTodo(e) {
     e.preventDefault();
     if (!todo) return;
-    addTodo(todo);
+    addTodo(todo, user?._id);
     setTodo("");
   }
 

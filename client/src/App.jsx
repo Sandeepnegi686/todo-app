@@ -6,17 +6,28 @@ import Home from "./pages/Home";
 import Ragister from "./pages/Register";
 import Layout from "./pages/Layout";
 import NoPage from "./pages/NoPage";
+import Profile from "./pages/Profile";
+import ProtectedRoutes from "./pages/ProtectedRoutes";
 
 function App() {
+  // const
   return (
     <AppProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoutes>
+                <Layout />
+              </ProtectedRoutes>
+            }
+          >
             <Route index element={<Home />} />
-            <Route path="register" element={<Ragister />} />
-            <Route path="*" element={<NoPage />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
+          <Route path="register" element={<Ragister />} />
+          <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster />

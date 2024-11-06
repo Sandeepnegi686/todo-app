@@ -9,7 +9,7 @@ import morgan from "morgan";
 import userRoute from "./routes/userRoute.js";
 import notFoundMiddleware from "./middlewares/NotFound.js";
 // import errorHandlerMiddleware from "./middlewares/error-handler.js";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 
 const app = express();
 dotenv.config();
@@ -40,9 +40,5 @@ async function start() {
     console.log(error);
   }
 }
-
-// import bcryptjs from "bcryptjs";
-// const salt = await bcryptjs.genSalt(10);
-// console.log(salt);
 
 start();

@@ -25,6 +25,26 @@ function reducer(currentState, action) {
           return todo;
         }),
       };
+    case "LOGIN_USER":
+      return {
+        ...currentState,
+        token: action.payload.token,
+        user: action.payload.user,
+        todos: action.payload.todos,
+      };
+    case "LOGOUT_USER":
+      return {
+        ...currentState,
+        token: "",
+        user: "",
+      };
+    case "SIGNUP_USER":
+      return {
+        ...currentState,
+        token: action.payload.token,
+        user: action.payload.user,
+        todos: action.payload.todos,
+      };
     default:
       break;
   }

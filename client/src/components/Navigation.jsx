@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 
 export default function Navigation() {
+  const { user, logoutUser } = useAppContext();
+
   return (
     <nav className="h-16 bg-indigo-300">
       <div className="conatiner max-w-4xl my-0 mx-auto h-full w-[90%]">
@@ -8,19 +11,39 @@ export default function Navigation() {
           <a href="/" className="text-2xl font-light text-[#fff]">
             TODO
           </a>
-          <div className="links">
+          <div className="links flex justify-center items-center">
             <NavLink
               to="/"
               className="px-4 text-lg font-normal hover:text-gray-600 transition ease-in-out duration-300"
             >
               Home
             </NavLink>
-            <NavLink
-              to="/register"
-              className="px-4 text-lg font-normal hover:text-gray-600 transition ease-in-out duration-300"
-            >
-              Login
-            </NavLink>
+            {user && (
+              <NavLink
+                to="/profile"
+                className="px-4 text-lg font-normal hover:text-gray-600 transition ease-in-out duration-300"
+              >
+                Profile
+              </NavLink>
+            )}
+            {user ? (
+              <NavLink
+                to="/"
+                className="px-4 text-lg font-normal hover:text-gray-600 transition ease-in-out duration-300"
+                aria-label="logout"
+                aria-labelledby="logout"
+                onClick={logoutUser}
+              >
+                <img src="/logout.svg" alt="logout" className="w-4 h-4" />
+              </NavLink>
+            ) : (
+              <NavLink
+                to="/register"
+                className="px-4 text-lg font-normal hover:text-gray-600 transition ease-in-out duration-300"
+              >
+                Login
+              </NavLink>
+            )}
           </div>
         </div>
       </div>
