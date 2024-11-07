@@ -2,13 +2,13 @@ import express from "express";
 import {
   createTodo,
   deleteTodo,
-  getAllTodo,
+  getTodoByUser,
   editTodo,
 } from "../controller/todoController.js";
 
 const todoRoute = express.Router();
 
-todoRoute.get("/", getAllTodo);
+todoRoute.get("/", getTodoByUser);
 
 todoRoute.post("/", createTodo);
 

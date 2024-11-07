@@ -37,6 +37,7 @@ function reducer(currentState, action) {
         ...currentState,
         token: "",
         user: "",
+        todos: [],
       };
     case "SIGNUP_USER":
       return {

@@ -41,21 +41,56 @@ function AppProvider({ children }) {
     localStorage.removeItem("token");
   }
 
-  //Get Todo from Database & adding them to localstorage
-  async function getTodos() {
+  //Add a Todo to Local Storage
+  function addTodosToLocalStorrage(todo) {
+    const todos =
+      JSON.parse(localStorage.getItem("todos")).length > 0
+        ? JSON.parse(localStorage.getItem("todos"))
+        : [];
+
+    todos.push(todo);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+
+  //Remove Todo From local Storage
+  function removeTodosFromLocalStorrage() {
+    localStorage.removeItem("todos");
+  }
+
+  //Edit & Delete a todo from Local Storage
+  function editAndDeleteTodoFromLocalStorage(updatedTodo, string) {
+    let todos = JSON.parse(localStorage.getItem("todos"));
+    if (todos.length > 0) {
+      if (string === "edit") {
+        todos.forEach((todo) => {
+          if (todo._id === updatedTodo._id) {
+            todo.status = "completed";
+          }
+        });
+      } else if (string === "delete") {
+        console.log(updatedTodo);
+        todos = todos.filter((todo) => todo._id !== updatedTodo._id);
+      }
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }
+
+  //Get Todo from Database
+  async function getTodos(id) {
     try {
-      const res = await axios.get("/todo");
-      // addTodosToLocalStorage(res.data.todos);
+      const res = await axios.get("/todo", { createdBy: id });
       dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
     } catch (error) {
       toast.error(error.message);
     }
   }
 
+  //Add a todo to database
   async function addTodo(todo, _id) {
     try {
       const res = await axios.post("/todo", { title: todo, createdBy: _id });
       dispatch({ type: ADD_TODO, payload: res.data.todo });
+      addTodosToLocalStorrage(res.data.todo);
       toast.success(res.data.message);
     } catch (error) {
       console.log(error);
@@ -63,35 +98,30 @@ function AppProvider({ children }) {
     }
   }
 
+  //Delete a todo from database & from localstorgae
   async function deleteTodo(id) {
     try {
       const res = await axios.delete(`/todo/${id}`);
       dispatch({ type: DELETE_TODO, payload: id });
+      editAndDeleteTodoFromLocalStorage(res.data.todo, "delete");
       toast.success(res.data.message);
     } catch (error) {
       // console.log(error);
       toast.error(error.message);
     }
   }
-
+  //Edit a todo from database & from localstorgae
   async function editTodo(id) {
     try {
       const res = await axios.patch(`/todo/${id}`);
       dispatch({ type: EDIT_TODO, payload: id });
+      editAndDeleteTodoFromLocalStorage(res.data.todo, "edit");
       toast.success(res.data.message);
+      console.log(res.data.todo);
     } catch (error) {
       toast.error(error.message);
     }
   }
-
-  // useEffect(function () {
-  //   getTodos();
-  // }, []);
-
-  // function onChangeHandleTodo(value) {
-  //   dispatch({ type: CHANGE_TODO_VALUE, payload: value });
-  //   console.log(value);
-  // }
 
   async function loginUser(value) {
     try {
@@ -99,7 +129,9 @@ function AppProvider({ children }) {
       const data = await res.data;
       const user = data.user;
       const token = data.token;
+      const todos = data.todos;
       addUserToLocalStorage({ user, token });
+      localStorage.setItem("todos", JSON.stringify(todos));
       dispatch({ type: LOGIN_USER, payload: data });
       toast.success(data.message);
       redirect("/");
@@ -112,8 +144,9 @@ function AppProvider({ children }) {
     try {
       const res = await axios.post("/user/register", data);
       const d = await res.data;
-      const { user, token } = d;
+      const { user, token, todos } = d;
       addUserToLocalStorage({ user, token });
+      localStorage.setItem("todos", JSON.stringify(todos));
       dispatch({ type: SIGNUP_USER, payload: d });
       redirect("/");
     } catch (error) {
@@ -123,8 +156,9 @@ function AppProvider({ children }) {
 
   async function logoutUser() {
     dispatch({ type: LOGOUT_USER });
-    toast.success("User logout");
     removerUserFromLocalStorage();
+    removeTodosFromLocalStorrage();
+    toast.success("User logout");
   }
 
   return (

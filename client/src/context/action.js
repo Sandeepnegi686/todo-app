@@ -13,9 +13,10 @@ export const LOGOUT_USER = "LOGOUT_USER";
 
 const user = localStorage.getItem("user");
 const token = localStorage.getItem("token");
+const todos = localStorage.getItem("todos");
 
 export const initialState = {
-  todos: [],
+  todos: JSON.parse(todos) || [],
   todo: "",
   token: token || "",
   user: JSON.parse(user) || "",

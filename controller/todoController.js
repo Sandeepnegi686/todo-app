@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 import TodoModel from "../model/Todo.js";
-import BadRequestError from "../error/BadRequestError.js";
 
-async function getAllTodo(req, res) {
+async function getTodoByUser(req, res) {
   try {
-    const todos = await TodoModel.find();
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ message: "ID is missing" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+    const todos = await TodoModel.find({ createdBy: id });
     if (todos.length === 0)
       return res.status(200).json({ message: "No todos found" });
     return res
@@ -76,4 +82,4 @@ async function deleteTodo(req, res) {
   }
 }
 
-export { getAllTodo, createTodo, deleteTodo, editTodo };
+export { getTodoByUser, createTodo, deleteTodo, editTodo };
