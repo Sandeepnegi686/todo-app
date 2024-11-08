@@ -2,16 +2,24 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import "express-async-errors";
+import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
 import todoRoute from "./routes/todoRoute.js";
 import { connectDB } from "./db/config.js";
-import morgan from "morgan";
 import userRoute from "./routes/userRoute.js";
 import authenticateUser from "./middlewares/auth.js";
 // import errorHandlerMiddleware from "./middlewares/error-handler.js";
-// import bcrypt from "bcryptjs";
 
 const app = express();
 dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.resolve("client/build")));
 
 const PORT = process.env.PORT || 5555;
 const MONGO_DB_URL = process.env.MONGO_DB_URL || "";
@@ -25,6 +33,11 @@ app.use(cors());
 
 app.use("/v1/api/todo", authenticateUser, todoRoute);
 app.use("/v1/api/user", userRoute);
+
+// only when ready to deploy
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
 
 // app.use(notFoundMiddleware);
 // app.use(errorHandlerMiddleware);
