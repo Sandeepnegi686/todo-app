@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.resolve("client/build")));
+app.use(express.static(path.resolve("client/dist")));
 
 const PORT = process.env.PORT || 5555;
 const MONGO_DB_URL = process.env.MONGO_DB_URL || "";
@@ -36,7 +36,7 @@ app.use("/v1/api/user", userRoute);
 
 // only when ready to deploy
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  res.sendFile(path.join(__dirname, "client/dist", "index.html"));
 });
 
 // app.use(notFoundMiddleware);
