@@ -18,6 +18,6 @@ const todos = localStorage.getItem("todos");
 export const initialState = {
   todos: JSON.parse(todos) || [],
   todo: "",
-  token: token || "",
+  token: JSON.parse(token) || "",
   user: JSON.parse(user) || "",
 };

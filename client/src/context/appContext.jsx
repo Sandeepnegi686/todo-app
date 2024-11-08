@@ -5,7 +5,6 @@ import { redirect } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   ADD_TODO,
-  CHANGE_TODO_VALUE,
   DELETE_TODO,
   EDIT_TODO,
   initialState,
@@ -17,17 +16,44 @@ import {
 
 const appContext = createContext();
 const serverURL = import.meta.env.VITE_SERVER_URL;
-axios.defaults.baseURL = `${serverURL}/v1/api`;
-
-// function redirectPath(path) {
-//   setTimeout(function () {
-//     redirect(path);
-//   }, 500);
-// }
 
 // eslint-disable-next-line react/prop-types
 function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const authFetch = axios.create({
+    baseURL: `${serverURL}/v1/api/`,
+    headers: { Authorization: `Bearer ${state.token}` },
+  });
+
+  //request
+  authFetch.interceptors.request.use(
+    function (config) {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    function (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  );
+
+  //response
+  authFetch.interceptors.response.use(
+    function (response) {
+      return response;
+    },
+    function (error) {
+      if (error.response.data.message === "Email already exist") {
+        return Promise.reject(error);
+      }
+      if (error.response.status == 400) {
+        logoutUser();
+        console.log(error);
+      }
+      return Promise.reject(error);
+    }
+  );
 
   // eslint-disable-next-line no-unused-vars
   function addUserToLocalStorage({ user, token }) {
@@ -68,7 +94,6 @@ function AppProvider({ children }) {
           }
         });
       } else if (string === "delete") {
-        console.log(updatedTodo);
         todos = todos.filter((todo) => todo._id !== updatedTodo._id);
       }
       localStorage.setItem("todos", JSON.stringify(todos));
@@ -78,7 +103,7 @@ function AppProvider({ children }) {
   //Get Todo from Database
   async function getTodos(id) {
     try {
-      const res = await axios.get("/todo", { createdBy: id });
+      const res = await authFetch.get("/todo", { createdBy: id });
       dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
     } catch (error) {
       toast.error(error.message);
@@ -86,9 +111,11 @@ function AppProvider({ children }) {
   }
 
   //Add a todo to database
-  async function addTodo(todo, _id) {
+  async function addTodo(title) {
     try {
-      const res = await axios.post("/todo", { title: todo, createdBy: _id });
+      const res = await authFetch.post("/todo", {
+        title,
+      });
       dispatch({ type: ADD_TODO, payload: res.data.todo });
       addTodosToLocalStorrage(res.data.todo);
       toast.success(res.data.message);
@@ -101,23 +128,22 @@ function AppProvider({ children }) {
   //Delete a todo from database & from localstorgae
   async function deleteTodo(id) {
     try {
-      const res = await axios.delete(`/todo/${id}`);
+      const res = await authFetch.delete(`/todo/${id}`);
       dispatch({ type: DELETE_TODO, payload: id });
       editAndDeleteTodoFromLocalStorage(res.data.todo, "delete");
       toast.success(res.data.message);
     } catch (error) {
-      // console.log(error);
       toast.error(error.message);
     }
   }
+
   //Edit a todo from database & from localstorgae
   async function editTodo(id) {
     try {
-      const res = await axios.patch(`/todo/${id}`);
+      const res = await authFetch.patch(`/todo/${id}`);
       dispatch({ type: EDIT_TODO, payload: id });
       editAndDeleteTodoFromLocalStorage(res.data.todo, "edit");
       toast.success(res.data.message);
-      console.log(res.data.todo);
     } catch (error) {
       toast.error(error.message);
     }
@@ -125,7 +151,7 @@ function AppProvider({ children }) {
 
   async function loginUser(value) {
     try {
-      const res = await axios.post("/user/login", value);
+      const res = await authFetch.post("/user/login", value);
       const data = await res.data;
       const user = data.user;
       const token = data.token;
@@ -142,11 +168,11 @@ function AppProvider({ children }) {
 
   async function signUpUser(data) {
     try {
-      const res = await axios.post("/user/register", data);
+      const res = await authFetch.post("/user/register", data);
       const d = await res.data;
-      const { user, token, todos } = d;
+      const { user, token } = d;
       addUserToLocalStorage({ user, token });
-      localStorage.setItem("todos", JSON.stringify(todos));
+      localStorage.setItem("todos", JSON.stringify([]));
       dispatch({ type: SIGNUP_USER, payload: d });
       redirect("/");
     } catch (error) {

@@ -3,7 +3,7 @@ import TodoModel from "../model/Todo.js";
 
 async function getTodoByUser(req, res) {
   try {
-    const { id } = req.body;
+    const id = req.userId;
     if (!id) {
       return res.status(400).json({ message: "ID is missing" });
     }
@@ -23,7 +23,8 @@ async function getTodoByUser(req, res) {
 
 async function createTodo(req, res) {
   try {
-    const { title, createdBy } = req.body;
+    const { title } = req.body;
+    const createdBy = req.userId;
     if (!title || !createdBy) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -41,16 +42,19 @@ async function createTodo(req, res) {
 
 async function editTodo(req, res) {
   try {
+    console.log("code run");
     const { id } = req.params;
+    const createdBy = req.userId;
     if (!id) return res.status(400).json({ message: "ID is missing" });
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({ message: "Not valid ID" });
 
-    const todo = await TodoModel.findOne({ _id: id });
-
+    const todo = await TodoModel.findOne({ _id: id, createdBy });
     if (!todo) return res.status(400).json({ message: "Todo not found" });
-
+    if (todo.status === "completed") {
+      return res.status(400).json({ message: "todo is already completed" });
+    }
     todo.status = "completed";
     await todo.save();
     return res.status(200).json({ message: "Todo compeleted", todo });
@@ -63,6 +67,7 @@ async function editTodo(req, res) {
 async function deleteTodo(req, res) {
   try {
     const { id } = req.params;
+    const createdBy = req.userId;
 
     if (!id) {
       return res.status(400).json({ message: "ID is not given" });
@@ -72,10 +77,13 @@ async function deleteTodo(req, res) {
       return res.status(400).json({ message: "Invalid ID " });
     }
 
-    const todo = await TodoModel.findById(id);
-    if (!todo) return res.status(400).json({ message: "Todo not found" });
+    const todo = await TodoModel.deleteOne({ _id: id, createdBy });
 
-    await todo.deleteOne();
+    if (todo.deletedCount === 0) {
+      return res.status(400).json({ message: "Todo not found" });
+    }
+
+    // await todo.deleteOne();
     return res.status(200).json({ message: "Todo deleted successfully", todo });
   } catch (error) {
     return res.status(500).json({ message: "Server errors" });

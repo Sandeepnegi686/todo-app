@@ -2,12 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import "express-async-errors";
-
 import todoRoute from "./routes/todoRoute.js";
 import { connectDB } from "./db/config.js";
 import morgan from "morgan";
 import userRoute from "./routes/userRoute.js";
-import notFoundMiddleware from "./middlewares/NotFound.js";
+import authenticateUser from "./middlewares/auth.js";
 // import errorHandlerMiddleware from "./middlewares/error-handler.js";
 // import bcrypt from "bcryptjs";
 
@@ -24,10 +23,10 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json());
 app.use(cors());
 
-app.use("/v1/api/todo", todoRoute);
+app.use("/v1/api/todo", authenticateUser, todoRoute);
 app.use("/v1/api/user", userRoute);
 
-app.use(notFoundMiddleware);
+// app.use(notFoundMiddleware);
 // app.use(errorHandlerMiddleware);
 
 async function start() {

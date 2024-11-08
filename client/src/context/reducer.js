@@ -44,7 +44,6 @@ function reducer(currentState, action) {
         ...currentState,
         token: action.payload.token,
         user: action.payload.user,
-        todos: action.payload.todos,
       };
     default:
       break;
