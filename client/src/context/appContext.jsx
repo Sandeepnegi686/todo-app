@@ -21,8 +21,10 @@ const serverURL = import.meta.env.VITE_SERVER_URL;
 function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //baseURL: `${serverURL}/v1/api/`,
+  
   const authFetch = axios.create({
-    baseURL: `${serverURL}/v1/api/`,
+    baseURL: '/v1/api/',
     headers: { Authorization: `Bearer ${state.token}` },
   });
 
