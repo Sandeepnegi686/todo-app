@@ -127,10 +127,11 @@ function AppProvider({ children }) {
 
   //Delete a todo from database & from localstorgae
   async function deleteTodo(id) {
+    const todo = { _id: id };
     try {
       const res = await authFetch.delete(`/todo/${id}`);
       dispatch({ type: DELETE_TODO, payload: id });
-      editAndDeleteTodoFromLocalStorage(res.data.todo, "delete");
+      editAndDeleteTodoFromLocalStorage(todo, "delete");
       toast.success(res.data.message);
     } catch (error) {
       toast.error(error.message);
