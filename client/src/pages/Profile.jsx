@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import InputBox from "../components/InputBox";
 
 export default function Profile() {
-  const { updateUser, user } = useAppContext();
+  const { updateUser, user, updateProfilePicture } = useAppContext();
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [oldPassword, setOldPassword] = useState("0000");
@@ -25,7 +26,16 @@ export default function Profile() {
         <div className="sign-up-box p-4 min-h-24 rounded-md overflow-hidden shadow-xl bg-white border-t-8 border-[#57568E]">
           <form className="my-2" onSubmit={handleUpdate}>
             <h2 className="text-center text-2xl mb-4">Profile</h2>
-
+            <div className="relative">
+              <div className="profile-img w-32 h-32 my-0 mx-auto border-2 border-[#57568E] rounded-[50%] overflow-hidden">
+                <img
+                  src="/profile-picture.jpg"
+                  className="max-w-full h-full object-cover"
+                  alt="profile-picture"
+                />
+              </div>
+              <EditIcon handlePictureChange={updateProfilePicture} />
+            </div>
             {changePassword ? (
               <>
                 <InputBox
@@ -76,18 +86,32 @@ export default function Profile() {
             >
               {changePassword ? "Update Password" : "Update User"}
             </button>
-            {/* <p className="mt-4 text-center text-lg text-gray-800">
-              {newUser ? "Not a member yet ? " : "Already a member ? "}
-              <span
-                className="text-[#57568E] cursor-pointer"
-                onClick={() => setNewUser((p) => !p)}
-              >
-                {newUser ? "Register" : "Login"}
-              </span>
-            </p> */}
           </form>
         </div>
       </div>
     </div>
   );
 }
+
+const EditIcon = ({ handlePictureChange }) => (
+  <div
+    className="absolute left-[57%] top-[73%] cursor-pointer"
+    onClick={handlePictureChange}
+  >
+    <svg
+      className="feather feather-edit"
+      fill="none"
+      height="24"
+      width="24"
+      stroke="#A5B4FC"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+  </div>
+);
