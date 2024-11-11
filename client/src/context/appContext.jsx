@@ -201,6 +201,10 @@ function AppProvider({ children }) {
     }
   }
 
+  async function updateProfilePicture() {
+    console.log("editing profile picture");
+  }
+
   async function logoutUser() {
     dispatch({ type: LOGOUT_USER });
     removerUserFromLocalStorage();
@@ -219,6 +223,7 @@ function AppProvider({ children }) {
         signUpUser,
         logoutUser,
         updateUser,
+        updateProfilePicture,
       }}
     >
       {children}
