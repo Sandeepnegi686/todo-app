@@ -1,7 +1,93 @@
+import { useState } from "react";
 import { useAppContext } from "../context/appContext";
+import InputBox from "../components/InputBox";
 
 export default function Profile() {
-  const { user } = useAppContext();
+  const { updateUser, user } = useAppContext();
+  const [name, setName] = useState(user?.name);
+  const [email, setEmail] = useState(user?.email);
+  const [oldPassword, setOldPassword] = useState("0000");
+  const [newPassword, setNewPassword] = useState("");
+  const [changePassword, setChangePassword] = useState(false);
 
-  return <h1>Hello {user?.name}</h1>;
+  function handleUpdate(e) {
+    e.preventDefault();
+    updateUser({ name, email, oldPassword, newPassword, changePassword });
+    setName("");
+    setEmail("");
+    setOldPassword("");
+    setNewPassword("");
+  }
+
+  return (
+    <div className="conatiner max-w-md my-0 mx-auto min-h-full w-[90%] mt-20">
+      <div className="w-full min-h-full">
+        <div className="sign-up-box p-4 min-h-24 rounded-md overflow-hidden shadow-xl bg-white border-t-8 border-[#57568E]">
+          <form className="my-2" onSubmit={handleUpdate}>
+            <h2 className="text-center text-2xl mb-4">Profile</h2>
+
+            {changePassword ? (
+              <>
+                <InputBox
+                  type="password"
+                  id="oldPassword"
+                  label="Current Password"
+                  name="Password"
+                  value={oldPassword}
+                  handleChange={setOldPassword}
+                />
+                <InputBox
+                  type="password"
+                  id="newPassword"
+                  label="New Password"
+                  name="Password"
+                  value={newPassword}
+                  handleChange={setNewPassword}
+                />
+              </>
+            ) : (
+              <>
+                <InputBox
+                  type="name"
+                  label="Name"
+                  name="Name"
+                  value={name}
+                  handleChange={setName}
+                />
+                <InputBox
+                  type="email"
+                  label="Email"
+                  name="Email"
+                  value={email}
+                  handleChange={setEmail}
+                />
+              </>
+            )}
+
+            <p
+              className="pl-2 text-md text-gray-600 text-right hover:underline cursor-pointer"
+              onClick={() => setChangePassword((p) => !p)}
+            >
+              {changePassword ? "Change User Detail" : "Change Password"}
+            </p>
+            <button
+              className="text-center text-lg text-white-800 border border-gray-200 my-4 rounded w-full py-2 hover:bg-[#A5B4FC] hover:text-white transition duration-300 ease-in-out"
+              type="submit"
+            >
+              {changePassword ? "Update Password" : "Update User"}
+            </button>
+            {/* <p className="mt-4 text-center text-lg text-gray-800">
+              {newUser ? "Not a member yet ? " : "Already a member ? "}
+              <span
+                className="text-[#57568E] cursor-pointer"
+                onClick={() => setNewUser((p) => !p)}
+              >
+                {newUser ? "Register" : "Login"}
+              </span>
+            </p> */}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }

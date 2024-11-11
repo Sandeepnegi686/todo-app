@@ -5,7 +5,6 @@ import "express-async-errors";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 import todoRoute from "./routes/todoRoute.js";
 import { connectDB } from "./db/config.js";
@@ -15,10 +14,9 @@ import authenticateUser from "./middlewares/auth.js";
 
 const app = express();
 dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
-
 const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.resolve("client/dist")));
 
 const PORT = process.env.PORT || 5555;

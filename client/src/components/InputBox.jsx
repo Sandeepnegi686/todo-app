@@ -1,4 +1,11 @@
-export default function InputBox({ type, label, name, handleChange, value }) {
+export default function InputBox({
+  id,
+  type,
+  label,
+  name,
+  handleChange,
+  value,
+}) {
   return (
     <>
       <div className="input-feild flex flex-col py-2">
@@ -8,7 +15,7 @@ export default function InputBox({ type, label, name, handleChange, value }) {
         <input
           type={type}
           name={name}
-          id={type}
+          id={id || type}
           onChange={(e) => handleChange(e.target.value)}
           value={value}
           required

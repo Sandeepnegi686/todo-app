@@ -10,7 +10,6 @@ import Profile from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 
 function App() {
-  // const
   return (
     <AppProvider>
       <BrowserRouter>
@@ -23,7 +22,7 @@ function App() {
               </ProtectedRoutes>
             }
           >
-            <Route index element={<Home />} />
+            <Route path="" element={<Home />} />
             <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="register" element={<Ragister />} />

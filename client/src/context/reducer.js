@@ -45,6 +45,11 @@ function reducer(currentState, action) {
         token: action.payload.token,
         user: action.payload.user,
       };
+    case "USER_UPDATE":
+      return {
+        ...currentState,
+        user: action.payload,
+      };
     default:
       break;
   }

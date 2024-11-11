@@ -68,7 +68,7 @@ export default function Ragister() {
               />
 
               <button
-                className="text-center text-lg text-gray-800 border border-gray-200 my-4 rounded w-full py-2 hover:bg-slate-200 transition duration-300 ease-in-out"
+                className="text-center text-lg text-gray-800 border border-gray-200 my-4 rounded w-full py-2 hover:bg-[#A5B4FC] hover:text-white transition duration-300 ease-in-out"
                 type="submit"
               >
                 {newUser ? "Sign up" : "Login"}

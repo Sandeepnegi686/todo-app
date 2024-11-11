@@ -10,21 +10,19 @@ import {
   initialState,
   LOGIN_USER,
   LOGOUT_USER,
-  SET_TODO_IN_STATE,
   SIGNUP_USER,
+  USER_UPDATE,
 } from "./action";
 
 const appContext = createContext();
-const serverURL = import.meta.env.VITE_SERVER_URL;
+const serverURL = import.meta.env.VITE_SERVER_URL || "";
 
 // eslint-disable-next-line react/prop-types
 function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  //baseURL: `${serverURL}/v1/api/`,
-  
   const authFetch = axios.create({
-    baseURL: '/v1/api/',
+    baseURL: `${serverURL}/v1/api/`,
     headers: { Authorization: `Bearer ${state.token}` },
   });
 
@@ -49,7 +47,7 @@ function AppProvider({ children }) {
       if (error.response.data.message === "Email already exist") {
         return Promise.reject(error);
       }
-      if (error.response.status == 400) {
+      if (error.response.status == 401) {
         logoutUser();
         console.log(error);
       }
@@ -99,16 +97,6 @@ function AppProvider({ children }) {
         todos = todos.filter((todo) => todo._id !== updatedTodo._id);
       }
       localStorage.setItem("todos", JSON.stringify(todos));
-    }
-  }
-
-  //Get Todo from Database
-  async function getTodos(id) {
-    try {
-      const res = await authFetch.get("/todo", { createdBy: id });
-      dispatch({ type: SET_TODO_IN_STATE, payload: res.data.todos });
-    } catch (error) {
-      toast.error(error.message);
     }
   }
 
@@ -183,6 +171,36 @@ function AppProvider({ children }) {
     }
   }
 
+  async function updateUser(value) {
+    try {
+      if (value.changePassword) {
+        const res = await authFetch.patch("/user/updateUserDetail", {
+          changePassword: true,
+          oldPassword: value.oldPassword,
+          newPassword: value.newPassword,
+        });
+        const { message } = await res.data;
+        toast.success(message);
+      } else {
+        const res = await authFetch.patch("/user/updateUserDetail", {
+          changePassword: false,
+          name: value.name,
+          email: value.email,
+        });
+        const d = await res.data;
+        const { message, user, token } = d;
+        console.log(d);
+
+        dispatch({ type: USER_UPDATE, payload: user });
+
+        addUserToLocalStorage({ user, token });
+        toast.success(message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
+
   async function logoutUser() {
     dispatch({ type: LOGOUT_USER });
     removerUserFromLocalStorage();
@@ -200,6 +218,7 @@ function AppProvider({ children }) {
         loginUser,
         signUpUser,
         logoutUser,
+        updateUser,
       }}
     >
       {children}

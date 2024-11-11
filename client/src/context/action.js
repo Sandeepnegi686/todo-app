@@ -11,13 +11,17 @@ export const LOGIN_USER = "LOGIN_USER";
 export const SIGNUP_USER = "SIGNUP_USER";
 export const LOGOUT_USER = "LOGOUT_USER";
 
-const user = localStorage.getItem("user");
-const token = localStorage.getItem("token");
+export const USER_UPDATE = "USER_UPDATE";
+
+const user = localStorage.getItem("user") ? localStorage.getItem("user") : "";
+const token = localStorage.getItem("token")
+  ? localStorage.getItem("token")
+  : "";
 const todos = localStorage.getItem("todos");
 
 export const initialState = {
   todos: JSON.parse(todos) || [],
   todo: "",
-  token: JSON.parse(token) || "",
-  user: JSON.parse(user) || "",
+  token: token ? JSON.parse(token) : "",
+  user: user ? JSON.parse(user) : "",
 };
