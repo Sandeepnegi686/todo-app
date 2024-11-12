@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  profileImg: {
+    type: String,
+    default: "/uploads/demo-profile.jpg",
+  },
 });
 
 userSchema.pre("save", async function (next) {

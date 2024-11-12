@@ -19,7 +19,11 @@ async function createUser(req, res) {
 
     return res.status(201).json({
       message: "user created successfully",
-      user: { name: newUser.name, email: newUser.email },
+      user: {
+        name: newUser.name,
+        email: newUser.email,
+        profileImg: newUser.profileImg,
+      },
       token,
     });
   } catch (error) {
@@ -54,6 +58,7 @@ async function loginUser(req, res) {
     user: {
       name: user.name,
       email: user.email,
+      profileImg: user.profileImg,
     },
     token,
     todos,
@@ -62,8 +67,10 @@ async function loginUser(req, res) {
 
 async function updateUserDetail(req, res) {
   try {
-    const { name, email, changePassword, oldPassword, newPassword } = req.body;
+    const { name, email, oldPassword, newPassword } = req.body;
     const createdBy = req.userId;
+    let { changePassword } = req.body;
+    changePassword = changePassword === "true" ? true : false;
     if (!changePassword) {
       if (!name || !email) {
         return res.status(400).json({ message: "all fields are required" });
@@ -81,6 +88,7 @@ async function updateUserDetail(req, res) {
           user: {
             name: existingUser.name,
             email: existingUser.email,
+            profileImg: existingUser.profileImg,
           },
           token,
         });
@@ -93,6 +101,7 @@ async function updateUserDetail(req, res) {
 
       existingUser.name = name;
       existingUser.email = email;
+      existingUser.profileImg = profileImg;
       await existingUser.save();
       const token = existingUser.createJWT();
 
@@ -101,6 +110,7 @@ async function updateUserDetail(req, res) {
         user: {
           name: existingUser.name,
           email: existingUser.email,
+          profileImg: existingUser.profileImg,
         },
         token,
       });
@@ -115,6 +125,7 @@ async function updateUserDetail(req, res) {
       const user = await userModel
         .findOne({ _id: createdBy })
         .select("+password");
+
       const correctOldPass = await user.comparePasswords(
         oldPassword.toString()
       );
