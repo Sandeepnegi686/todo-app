@@ -4,7 +4,8 @@ import { useAppContext } from "../context/appContext";
 import InputBox from "../components/InputBox";
 
 export default function Profile() {
-  const { updateUser, user, updateProfilePicture } = useAppContext();
+  const { user, updateProfilePicture, updateUser, updatePass } =
+    useAppContext();
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [oldPassword, setOldPassword] = useState("0000");
@@ -13,11 +14,15 @@ export default function Profile() {
 
   function handleUpdate(e) {
     e.preventDefault();
-    updateUser({ name, email, oldPassword, newPassword, changePassword });
-    setName("");
-    setEmail("");
-    setOldPassword("");
-    setNewPassword("");
+    if (changePassword) {
+      updatePass({ oldPassword, newPassword });
+      setOldPassword("");
+      setNewPassword("");
+    } else {
+      updateUser({ name, email });
+      setName("");
+      setEmail("");
+    }
   }
 
   return (

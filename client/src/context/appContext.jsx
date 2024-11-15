@@ -173,29 +173,30 @@ function AppProvider({ children }) {
 
   async function updateUser(value) {
     try {
-      if (value.changePassword) {
-        const res = await authFetch.patch("/user/updateUserDetail", {
-          changePassword: true,
-          oldPassword: value.oldPassword,
-          newPassword: value.newPassword,
-        });
-        const { message } = await res.data;
-        toast.success(message);
-      } else {
-        const res = await authFetch.patch("/user/updateUserDetail", {
-          changePassword: false,
-          name: value.name,
-          email: value.email,
-        });
-        const d = await res.data;
-        const { message, user, token } = d;
-        console.log(d);
+      const res = await authFetch.patch("/user/updateUserDetail", {
+        changePassword: false,
+        name: value.name,
+        email: value.email,
+      });
+      const d = await res.data;
+      const { message, user, token } = d;
+      // console.log(d);
+      dispatch({ type: USER_UPDATE, payload: user });
+      addUserToLocalStorage({ user, token });
+      toast.success(message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
 
-        dispatch({ type: USER_UPDATE, payload: user });
-
-        addUserToLocalStorage({ user, token });
-        toast.success(message);
-      }
+  async function updatePass(value) {
+    try {
+      const res = await authFetch.patch("/user/updateUserPass", {
+        oldPassword: value.oldPassword,
+        newPassword: value.newPassword,
+      });
+      const { message } = await res.data;
+      toast.success(message);
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -223,6 +224,7 @@ function AppProvider({ children }) {
         signUpUser,
         logoutUser,
         updateUser,
+        updatePass,
         updateProfilePicture,
       }}
     >

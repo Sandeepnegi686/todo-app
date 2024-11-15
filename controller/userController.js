@@ -67,41 +67,16 @@ async function loginUser(req, res) {
 
 async function updateUserDetail(req, res) {
   try {
-    const { name, email, oldPassword, newPassword } = req.body;
+    const { name, email } = req.body;
     const createdBy = req.userId;
-    let { changePassword } = req.body;
-    changePassword = changePassword === "true" ? true : false;
-    if (!changePassword) {
-      if (!name || !email) {
-        return res.status(400).json({ message: "all fields are required" });
-      }
+    if (!name || !email) {
+      return res.status(400).json({ message: "all fields are required" });
+    }
 
-      //Checking someone is using email or not
-      const existingUser = await userModel.findOne({ _id: createdBy });
-      if (existingUser.email === email) {
-        existingUser.name = name;
-        await existingUser.save();
-        const token = existingUser.createJWT();
-
-        return res.status(200).json({
-          message: "User Updated",
-          user: {
-            name: existingUser.name,
-            email: existingUser.email,
-            profileImg: existingUser.profileImg,
-          },
-          token,
-        });
-      }
-
-      const anyUserUsingEmail = await userModel.findOne({ email });
-      if (anyUserUsingEmail) {
-        return res.status(400).json({ message: "Email already is in use." });
-      }
-
+    //Checking someone is using email or not
+    const existingUser = await userModel.findOne({ _id: createdBy });
+    if (existingUser.email === email) {
       existingUser.name = name;
-      existingUser.email = email;
-      existingUser.profileImg = profileImg;
       await existingUser.save();
       const token = existingUser.createJWT();
 
@@ -114,32 +89,27 @@ async function updateUserDetail(req, res) {
         },
         token,
       });
-    } else {
-      if (!newPassword || !oldPassword) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-      if (newPassword === oldPassword) {
-        return res.status(400).json({ message: "Passwords are same" });
-      }
-
-      const user = await userModel
-        .findOne({ _id: createdBy })
-        .select("+password");
-
-      const correctOldPass = await user.comparePasswords(
-        oldPassword.toString()
-      );
-
-      if (!correctOldPass) {
-        return res.status(400).json({ message: "Old password is not correct" });
-      }
-
-      user.password = newPassword;
-      await user.save();
-      // const token = user.createJWT();
-
-      return res.status(200).json({ message: "password change" });
     }
+
+    const anyUserUsingEmail = await userModel.findOne({ email });
+    if (anyUserUsingEmail) {
+      return res.status(400).json({ message: "Email already is in use." });
+    }
+
+    existingUser.name = name;
+    existingUser.email = email;
+    await existingUser.save();
+    const token = existingUser.createJWT();
+
+    return res.status(200).json({
+      message: "User Updated",
+      user: {
+        name: existingUser.name,
+        email: existingUser.email,
+        profileImg: existingUser.profileImg,
+      },
+      token,
+    });
   } catch (error) {
     console.log(error);
     if (error.name === "ValidationError") {
@@ -149,4 +119,30 @@ async function updateUserDetail(req, res) {
   }
 }
 
-export { createUser, loginUser, updateUserDetail };
+async function updateUserPass(req, res) {
+  const { oldPassword, newPassword } = req.body;
+  const createdBy = req.userId;
+
+  if (!newPassword || !oldPassword) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+  if (newPassword === oldPassword) {
+    return res.status(400).json({ message: "Passwords are same" });
+  }
+
+  const user = await userModel.findOne({ _id: createdBy }).select("+password");
+
+  const correctOldPass = await user.comparePasswords(oldPassword.toString());
+
+  if (!correctOldPass) {
+    return res.status(400).json({ message: "Old password is not correct" });
+  }
+
+  user.password = newPassword;
+  await user.save();
+  // const token = user.createJWT();
+
+  return res.status(200).json({ message: "password change" });
+}
+
+export { createUser, loginUser, updateUserDetail, updateUserPass };
