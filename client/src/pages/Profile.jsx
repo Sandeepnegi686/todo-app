@@ -6,6 +6,7 @@ import InputBox from "../components/InputBox";
 export default function Profile() {
   const { user, updateProfilePicture, updateUser, updatePass } =
     useAppContext();
+
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [oldPassword, setOldPassword] = useState("0000");
@@ -25,6 +26,8 @@ export default function Profile() {
     }
   }
 
+  function handleToggle() {}
+
   return (
     <div className="conatiner max-w-md my-0 mx-auto min-h-full w-[90%] mt-20">
       <div className="w-full min-h-full">
@@ -39,7 +42,7 @@ export default function Profile() {
                   alt="profile-picture"
                 />
               </div>
-              <EditIcon handlePictureChange={updateProfilePicture} />
+              <EditIcons handlePictureChange={handleToggle} />
             </div>
             {changePassword ? (
               <>
@@ -98,25 +101,27 @@ export default function Profile() {
   );
 }
 
-const EditIcon = ({ handlePictureChange }) => (
-  <div
-    className="absolute left-[57%] top-[73%] cursor-pointer"
-    onClick={handlePictureChange}
-  >
-    <svg
-      className="feather feather-edit"
-      fill="none"
-      height="24"
-      width="24"
-      stroke="#A5B4FC"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
+const EditIcons = ({ handlePictureChange }) => (
+  <>
+    <div
+      className="absolute left-[57%] top-[73%] cursor-pointer"
+      onClick={handlePictureChange}
     >
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-    </svg>
-  </div>
+      <svg
+        className="feather feather-edit"
+        fill="none"
+        height="24"
+        width="24"
+        stroke="#A5B4FC"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+      </svg>
+    </div>
+  </>
 );

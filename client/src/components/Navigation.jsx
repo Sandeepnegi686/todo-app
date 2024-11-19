@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
+import Avatar from "@mui/material/Avatar";
+import { deepPurple } from "@mui/material/colors";
 
 export default function Navigation() {
   const { user, logoutUser } = useAppContext();
@@ -43,6 +45,11 @@ export default function Navigation() {
               >
                 Login
               </NavLink>
+            )}
+            {user && (
+              <Avatar sx={{ width: 30, height: 30, bgcolor: deepPurple[500] }}>
+                {user?.name[0]}
+              </Avatar>
             )}
           </div>
         </div>
