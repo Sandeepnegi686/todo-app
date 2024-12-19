@@ -1,5 +1,13 @@
 import TodoModel from "../model/Todo.js";
 import userModel from "../model/User.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// const filePath = path.join(__dirname, "..", "uploads");
+// console.log(filePath);
 
 async function createUser(req, res) {
   try {
@@ -145,4 +153,68 @@ async function updateUserPass(req, res) {
   return res.status(200).json({ message: "password change" });
 }
 
-export { createUser, loginUser, updateUserDetail, updateUserPass };
+async function updateUserProfileImg(req, res) {
+  try {
+    const createdBy = req.userId;
+    // Check if a file is uploaded
+    if (!req.fileName) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+    // Extract the file name from the request
+    const fileName = req.fileName;
+    // Update the user's profile image in the database
+    const user = await userModel.findOne({ _id: createdBy });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    //  ===> "/uploads/demo-profile.jpg  this is user first/default image.
+    if (user.profileImg === "/uploads/demo-profile.jpg") {
+      //user is changing image first time.
+      const updatedUser = await userModel.findOneAndUpdate(
+        { _id: createdBy },
+        { profileImg: `/uploads/${fileName}` },
+        { new: true }
+      );
+      return res.status(201).json({
+        message: "Profile photo updated",
+        user: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+          profileImg: updatedUser.profileImg,
+        },
+      });
+    } else {
+      // user changing more than one time.
+      //finding and deleting the image from the server.
+      const filePath = path.join(__dirname, "../", user.profileImg);
+      fs.unlink(filePath, (err) => {
+        if (err) return res.status(400).json({ message: "No file uploaded" });
+      });
+      //Now we upload a new file.
+      const updatedUser = await userModel.findOneAndUpdate(
+        { _id: createdBy },
+        { profileImg: `/uploads/${fileName}` },
+        { new: true }
+      );
+      return res.status(201).json({
+        message: "Profile photo updated",
+        user: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+          profileImg: updatedUser.profileImg,
+        },
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "server error", error });
+  }
+}
+
+export {
+  createUser,
+  loginUser,
+  updateUserDetail,
+  updateUserPass,
+  updateUserProfileImg,
+};

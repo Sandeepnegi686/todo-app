@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import InputBox from "../components/InputBox";
+import DialogDemo from "../components/Dialog";
 
 export default function Profile() {
   const { user, updateProfilePicture, updateUser, updatePass } =
@@ -26,24 +27,29 @@ export default function Profile() {
     }
   }
 
-  function handleToggle() {}
+  function handleToggle() {
+    console.log("update");
+  }
 
   return (
     <div className="conatiner max-w-md my-0 mx-auto min-h-full w-[90%] mt-20">
       <div className="w-full min-h-full">
         <div className="sign-up-box p-4 min-h-24 rounded-md overflow-hidden shadow-xl bg-white border-t-8 border-[#57568E]">
-          <form className="my-2" onSubmit={handleUpdate}>
-            <h2 className="text-center text-2xl mb-4">Profile</h2>
-            <div className="relative">
-              <div className="profile-img w-32 h-32 my-0 mx-auto border-2 border-[#57568E] rounded-[50%] overflow-hidden">
-                <img
-                  src="/profile-picture.jpg"
-                  className="max-w-full h-full object-cover"
-                  alt="profile-picture"
-                />
-              </div>
-              <EditIcons handlePictureChange={handleToggle} />
+          <div className="flex justify-around items-center">
+            <div className="profile-img w-24 h-24 my-0 border-2 border-[#57568E] rounded-[50%] overflow-hidden">
+              <img
+                src="/profile-picture.jpg"
+                className="max-w-full h-full object-cover"
+                alt="profile-picture"
+              />
             </div>
+            <DialogDemo />
+          </div>
+          <form className="my-2" onSubmit={handleUpdate}>
+            <h2 className="text-center text-2xl mb-4">
+              {changePassword ? "Change Password" : "Update Profile"}
+            </h2>
+
             {changePassword ? (
               <>
                 <InputBox
@@ -100,28 +106,3 @@ export default function Profile() {
     </div>
   );
 }
-
-const EditIcons = ({ handlePictureChange }) => (
-  <>
-    <div
-      className="absolute left-[57%] top-[73%] cursor-pointer"
-      onClick={handlePictureChange}
-    >
-      <svg
-        className="feather feather-edit"
-        fill="none"
-        height="24"
-        width="24"
-        stroke="#A5B4FC"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-      </svg>
-    </div>
-  </>
-);

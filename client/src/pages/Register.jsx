@@ -74,12 +74,12 @@ export default function Ragister() {
                 {newUser ? "Sign up" : "Login"}
               </button>
               <p className="mt-4 text-center text-lg text-gray-800">
-                {newUser ? "Not a member yet ? " : "Already a member ? "}
+                {newUser ? "Already a member ? " : "Not a member yet ? "}
                 <span
                   className="text-[#57568E] cursor-pointer"
                   onClick={() => setNewUser((p) => !p)}
                 >
-                  {newUser ? "Register" : "Login"}
+                  {newUser ? "Login" : "Register"}
                 </span>
               </p>
             </form>
