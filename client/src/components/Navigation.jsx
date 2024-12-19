@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
+import { AvatarDemo } from "./Avatar";
 
 export default function Navigation() {
   const { user, logoutUser } = useAppContext();
@@ -44,16 +45,7 @@ export default function Navigation() {
                 Login
               </NavLink>
             )}
-            {user && (
-              <>
-                {/* <Avatar
-                  sx={{ width: 30, height: 30, bgcolor: deepPurple[500] }}
-                >
-                  {user?.name[0]}
-                </Avatar> */}
-                <AvatarDemo name={user?.name[0]} />
-              </>
-            )}
+            {user && <AvatarDemo name={user?.name[0]} />}
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { useAppContext } from "@/context/appContext";
 import {
   Avatar,
   AvatarFallback,
@@ -5,9 +6,13 @@ import {
 } from "../../components/ui/avatar";
 
 export function AvatarDemo({ name }) {
+  const { user } = useAppContext();
+
+  console.log(user);
+
   return (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+      <AvatarImage src={user?.profileImg} alt="icon" />
       <AvatarFallback>{name}</AvatarFallback>
     </Avatar>
   );
