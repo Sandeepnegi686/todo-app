@@ -8,7 +8,7 @@ import {
 export function AvatarDemo({ name }) {
   const { user } = useAppContext();
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <Avatar>

@@ -31,6 +31,7 @@ export default function DialogDemo() {
               id="name"
               defaultValue="Pedro Duarte"
               className="col-span-3"
+              type="file"
             />
           </div>
         </div>

@@ -55,13 +55,11 @@ function AppProvider({ children }) {
     }
   );
 
-  // eslint-disable-next-line no-unused-vars
   function addUserToLocalStorage({ user, token }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", JSON.stringify(token));
   }
 
-  // eslint-disable-next-line no-unused-vars
   function removerUserFromLocalStorage() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -202,8 +200,21 @@ function AppProvider({ children }) {
     }
   }
 
-  async function updateProfilePicture() {
-    console.log("editing profile picture");
+  async function updateProfilePicture(formData) {
+    try {
+      const res = await authFetch.put("user/updateUserProfileImg", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const { message, user, token } = await res.data;
+      toast.success(message);
+      dispatch({ type: USER_UPDATE, payload: res.data.user });
+      addUserToLocalStorage({ user, token });
+      alert("Profile picture updated successfully");
+    } catch (error) {
+      toast.error(error?.response?.data?.message ?? "Error updating profile");
+    }
   }
 
   async function logoutUser() {

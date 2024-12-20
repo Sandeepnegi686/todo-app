@@ -157,6 +157,7 @@ async function updateUserProfileImg(req, res) {
   try {
     const createdBy = req.userId;
     // Check if a file is uploaded
+    // console.log(req.fileName);
     if (!req.fileName) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -169,13 +170,14 @@ async function updateUserProfileImg(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
     //  ===> "/uploads/demo-profile.jpg  this is user first/default image.
-    if (user.profileImg === "/uploads/demo-profile.jpg") {
+    if (user?.profileImg === "/uploads/demo-profile.jpg" || !user.profileImg) {
       //user is changing image first time.
       const updatedUser = await userModel.findOneAndUpdate(
         { _id: createdBy },
         { profileImg: `/uploads/${fileName}` },
         { new: true }
       );
+      const token = updatedUser.createJWT();
       return res.status(201).json({
         message: "Profile photo updated",
         user: {
@@ -183,6 +185,7 @@ async function updateUserProfileImg(req, res) {
           email: updatedUser.email,
           profileImg: updatedUser.profileImg,
         },
+        token,
       });
     } else {
       // user changing more than one time.
@@ -197,6 +200,7 @@ async function updateUserProfileImg(req, res) {
         { profileImg: `/uploads/${fileName}` },
         { new: true }
       );
+      const token = updatedUser.createJWT();
       return res.status(201).json({
         message: "Profile photo updated",
         user: {
@@ -204,6 +208,7 @@ async function updateUserProfileImg(req, res) {
           email: updatedUser.email,
           profileImg: updatedUser.profileImg,
         },
+        token,
       });
     }
   } catch (error) {

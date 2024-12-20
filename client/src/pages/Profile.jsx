@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import InputBox from "../components/InputBox";
-import DialogDemo from "../components/Dialog";
+// import DialogDemo from "../components/Dialog";
+import { InputFile } from "../components/InputFile";
 
 export default function Profile() {
   const { user, updateProfilePicture, updateUser, updatePass } =
@@ -35,21 +36,22 @@ export default function Profile() {
     <div className="conatiner max-w-md my-0 mx-auto min-h-full w-[90%] mt-20">
       <div className="w-full min-h-full">
         <div className="sign-up-box p-4 min-h-24 rounded-md overflow-hidden shadow-xl bg-white border-t-8 border-[#57568E]">
-          <div className="flex justify-around items-center">
+          <div className="flex justify-around items-center pb-6 border-b-2">
             <div className="profile-img w-24 h-24 my-0 border-2 border-[#57568E] rounded-[50%] overflow-hidden">
               <img
-                src="/profile-picture.jpg"
+                src={user?.profileImg}
                 className="max-w-full h-full object-cover"
                 alt="profile-picture"
               />
             </div>
-            <DialogDemo />
+            <div className="update-profile-picture">
+              <InputFile />
+            </div>
           </div>
           <form className="my-2" onSubmit={handleUpdate}>
             <h2 className="text-center text-2xl mb-4">
               {changePassword ? "Change Password" : "Update Profile"}
             </h2>
-
             {changePassword ? (
               <>
                 <InputBox
@@ -87,7 +89,6 @@ export default function Profile() {
                 />
               </>
             )}
-
             <p
               className="pl-2 text-md text-gray-600 text-right hover:underline cursor-pointer"
               onClick={() => setChangePassword((p) => !p)}
