@@ -29,7 +29,7 @@ export default function Profile() {
   }
 
   function handleToggle() {
-    console.log("update");
+    console.log("update handle");
   }
 
   return (
